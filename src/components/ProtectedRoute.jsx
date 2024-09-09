@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import PropTypes from 'prop-types'; // Import PropTypes
+import PropTypes from 'prop-types'; 
 
 const ProtectedRoute = ({ children }) => {
-  // Add prop validation for 'children'
-  const token = localStorage.getItem('apiToken');  // Check token
+  
+  const token = localStorage.getItem('apiToken');  
 
   if (!token) {
     return <Navigate to="/signin" />;
@@ -13,7 +13,7 @@ const ProtectedRoute = ({ children }) => {
 };
 
 ProtectedRoute.propTypes = {
-  children: PropTypes.node.isRequired, // Add prop validation for 'children'
+  children: PropTypes.node.isRequired, 
 };
 
 export default ProtectedRoute;
