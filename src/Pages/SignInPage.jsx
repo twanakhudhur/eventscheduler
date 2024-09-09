@@ -14,7 +14,7 @@ const SignInPage = () => {
     setError(null);
 
     try {
-      const response = await fetch('/api/login', {  // Replace with the actual API login endpoint
+      const response = await fetch('/api/login', {  
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -28,10 +28,10 @@ const SignInPage = () => {
         throw new Error(data.message || 'Something went wrong');
       }
 
-      // Save API token to LocalStorage
+     
       localStorage.setItem('apiToken', data.token);
 
-      // Redirect to the home page or another protected page
+      
       navigate('/');
     } catch (error) {
       setError(error.message);
