@@ -15,24 +15,24 @@ const SignUpPage = () => {
     setLoading(true);
 
     try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {  // Replace with your actual API URL
+      const response = await fetch('https://api.openai.com/v1/chat/completions', {  
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',  // Send JSON data
+          'Content-Type': 'application/json',  
         },
-        body: JSON.stringify({ name, email, password }),  // Convert the data to a JSON string
+        body: JSON.stringify({ name, email, password }),  
       });
 
-      const data = await response.json();  // Parse the response JSON
+      const data = await response.json();  
 
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
       }
 
-      // If successful, redirect to the sign-in page
+      
       navigate('/signin');
     } catch (error) {
-      setError(error.message);  // Display error to user
+      setError(error.message);  
     } finally {
       setLoading(false);
     }
