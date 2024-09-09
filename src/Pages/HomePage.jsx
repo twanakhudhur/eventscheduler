@@ -5,10 +5,10 @@ const HomePage = () => {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    // Fetch the events from the API when the component mounts
+   
     const fetchEvents = async () => {
       try {
-        const response = await fetch('/api/events');  // Replace with actual API endpoint
+        const response = await fetch('/api/events');  
         const data = await response.json();
         setEvents(data);
       } catch (error) {
