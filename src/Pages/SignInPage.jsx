@@ -1,7 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const SignInPage = () => {
+  const { token } = useAuth();
+
+  if (token) {
+    return <Navigate to="/" />;
+  }
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -39,7 +45,7 @@ const SignInPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div>
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
         {error && <p className="text-red-500 text-center mb-4">{error}</p>}
@@ -74,7 +80,7 @@ const SignInPage = () => {
         </form>
 
         <p className="text-center mt-4">
-          Don't have an account? <a href="/signup" className="text-blue-500">Sign Up</a>
+          Don't have an account? <Link to="/signup" className="text-blue-500">Sign Up</Link>
         </p>
       </div>
     </div>

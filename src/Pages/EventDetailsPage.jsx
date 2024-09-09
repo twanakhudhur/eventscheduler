@@ -14,7 +14,7 @@ const EventDetailsPage = () => {
   if (!event) return <p className="text-center text-gray-500">Loading...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div>
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">{event.name}</h1>
         <p className="text-gray-700 mb-4">{event.description}</p>
