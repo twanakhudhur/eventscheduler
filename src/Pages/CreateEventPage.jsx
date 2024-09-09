@@ -12,19 +12,19 @@ const CreateEventPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Clear any previous success or error messages
+    
     setError(null);
     setSuccess(null);
 
-    // Retrieve the API token from localStorage
+    
     const token = localStorage.getItem('apiToken');
 
     try {
-      const response = await fetch('/api/events', {  // Replace with actual API endpoint for creating events
+      const response = await fetch('/api/events', {  
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,  // Pass the token in the Authorization header
+          'Authorization': `Bearer ${token}`,  
         },
         body: JSON.stringify({ name, date, description }),
       });
@@ -35,9 +35,9 @@ const CreateEventPage = () => {
         throw new Error(data.message || 'Something went wrong while creating the event');
       }
 
-      // If event is successfully created, show success message and redirect
+      
       setSuccess('Event created successfully!');
-      navigate('/');  // Redirect to the homepage or event listing after creating the event
+      navigate('/');  
 
     } catch (error) {
       setError(error.message);
