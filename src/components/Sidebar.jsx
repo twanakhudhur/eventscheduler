@@ -16,13 +16,14 @@ export const Sidebar = () => {
 
   const logout = () => {
     handleLogout();
+    closeSidebar()
     navigate("/");
   };
 
   return (
     <div className="drawer-side">
       <label htmlFor="sidebar" className="drawer-overlay"></label>
-      <ul className="menu w-52 lg:w-80 h-full bg-base-200">
+      <ul className="menu w-52 md:w-80 h-full bg-base-200">
         {navLinks
           .filter((link) => !link.protected || token)
           .map((link) => (
@@ -31,8 +32,8 @@ export const Sidebar = () => {
               to={link.to}
               onClick={closeSidebar}
               className={({ isActive }) =>
-                `p-4 hover:bg-gray-200 capitalize ${
-                  isActive ? "font-bold" : "border-transparent"
+                `p-4 hover:bg-neutral capitalize ${
+                  isActive ? "font-bold text-white" : "border-transparent"
                 }`
               }
             >
@@ -42,16 +43,17 @@ export const Sidebar = () => {
         {token ? (
           <button
             onClick={logout}
-            className="p-4 bg-gray-800 text-white hover:bg-gray-700 rounded-md capitalize mt-auto"
+            className="p-4 bg-gray-800 text-white hover:bg-neutral rounded-md capitalize mt-auto"
           >
             Log Out
           </button>
         ) : (
           <NavLink
             to="/signin"
+            onClick={closeSidebar}
             className={({ isActive }) =>
-              `p-4 hover:bg-gray-200 capitalize  ${
-                isActive ? "font-bold" : "border-transparent"
+              `p-4 hover:bg-neutral capitalize  ${
+                isActive ? "font-bold text-white" : "border-transparent"
               }`
             }
           >

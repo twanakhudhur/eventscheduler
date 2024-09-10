@@ -21,7 +21,7 @@ export const Navbar = () => {
     <div className="drawer">
       <input id="sidebar" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
-        <div className="navbar px-[3%] h-16 bg-gray-800 text-white">
+        <div className="navbar px-[3%] h-16 bg-base-200 text-neutral-content">
           <div className="flex-none lg:hidden">
             <label
               htmlFor="sidebar"
@@ -44,7 +44,7 @@ export const Navbar = () => {
               </svg>
             </label>
           </div>
-          <Link to={"/"} className="flex-1 text-xl font-semibold">
+          <Link to={"/"} className="flex-1 text-xl text-white font-semibold">
             Event Scheduler
           </Link>
           <div className="hidden lg:flex space-x-5">
@@ -55,9 +55,9 @@ export const Navbar = () => {
                   key={link.to}
                   to={link.to}
                   className={({ isActive }) =>
-                    `hover:text-gray-200 border-b-2 py-1 ${
+                    `hover:text-white border-b-2 py-1 ${
                       isActive
-                        ? "border-white hover:border-gray-200"
+                        ? "text-white border-white"
                         : "border-transparent"
                     }`
                   }
@@ -77,10 +77,8 @@ export const Navbar = () => {
               <NavLink
                 to="/signin"
                 className={({ isActive }) =>
-                  `hover:text-gray-400 border-b-2 py-1 ${
-                    isActive
-                      ? "border-white hover:border-gray-400"
-                      : "border-transparent"
+                  `hover:text-white border-b-2 py-1 ${
+                    isActive ? "text-white border-white" : "border-transparent"
                   }`
                 }
               >
