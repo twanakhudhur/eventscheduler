@@ -16,7 +16,7 @@ export const Sidebar = () => {
 
   const logout = () => {
     handleLogout();
-    closeSidebar()
+    closeSidebar();
     navigate("/");
   };
 
@@ -43,7 +43,7 @@ export const Sidebar = () => {
         {token ? (
           <button
             onClick={logout}
-            className="p-4 bg-gray-800 text-white hover:bg-neutral rounded-md capitalize mt-auto"
+            className="p-4 bg-neutral text-base-content hover:text-white rounded-md capitalize mt-auto"
           >
             Log Out
           </button>

@@ -69,7 +69,7 @@ export const Navbar = () => {
             {token ? (
               <button
                 onClick={logout}
-                className="bg-base-200 text-gray-800 px-3 py-1.5 text-sm rounded-md hover:scale-105 "
+                className="bg-neutral text-base-content px-3 py-1.5 text-sm rounded-md hover:text-white"
               >
                 Log Out
               </button>
