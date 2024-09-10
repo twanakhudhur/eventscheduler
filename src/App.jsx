@@ -4,13 +4,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import RootLayout from "./layouts/RootLayout";
-import EnventsPage from "./Pages/EnventsPage";
 import EventDetailsPage from "./Pages/EventDetailsPage";
 import HomePage from "./Pages/HomePage";
 import SignUpPage from "./Pages/SignUpPage";
 import SignInPage from "./Pages/SignInPage";
 import CreateEventPage from "./pages/CreateEventPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
+import UpcomingPage from "./Pages/UpcomingPage";
+import ProfilePage from "./Pages/ProfilePage";
 
 function App() {
   const router = createBrowserRouter([
@@ -21,6 +22,14 @@ function App() {
         {
           index: true,
           element: <HomePage />,
+        },
+        {
+          path: "/upcoming",
+          element: <UpcomingPage />,
+        },
+        {
+          path: "/events/:id",
+          element: <EventDetailsPage />,
         },
         {
           path: "/signin",
@@ -35,16 +44,12 @@ function App() {
           element: <ProtectedRoute />,
           children: [
             {
-              path: "/events",
-              element: <EnventsPage />,
-            },
-            {
-              path: "/events/:id",
-              element: <EventDetailsPage />,
-            },
-            {
               path: "/create-event",
               element: <CreateEventPage />,
+            },
+            {
+              path: "/profile",
+              element: <ProfilePage />,
             },
           ],
         },

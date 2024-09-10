@@ -2,10 +2,9 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../context/AuthContext";
 
-
 const navLinks = [
-  { to: "/", label: "Home", protected: false },
-  { to: "/events", label: "Events", protected: true },
+  { to: "/", label: "Events", protected: false },
+  { to: "/upcoming", label: "Upcoming", protected: false },
   { to: "/create-event", label: "Create Event", protected: true },
 ];
 
@@ -18,15 +17,14 @@ export const Navbar = () => {
     navigate("/");
   };
 
-
   return (
     <div className="drawer">
-      <input id="my-drawer-3" type="checkbox" className="drawer-toggle" />
+      <input id="sidebar" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content flex flex-col">
-        <div className="navbar px-[3%] bg-gray-800 text-white">
+        <div className="navbar px-[3%] h-16 bg-gray-800 text-white">
           <div className="flex-none lg:hidden">
             <label
-              htmlFor="my-drawer-3"
+              htmlFor="sidebar"
               aria-label="open sidebar"
               aria-expanded="false"
               className="btn btn-square btn-ghost"
@@ -46,12 +44,12 @@ export const Navbar = () => {
               </svg>
             </label>
           </div>
-          <Link to={"/"} className="flex-1 mx-2 text-xl font-semibold">
+          <Link to={"/"} className="flex-1 text-xl font-semibold">
             Event Scheduler
           </Link>
           <div className="hidden lg:flex space-x-5">
             {navLinks
-              .filter((link) => (!link.protected || token))
+              .filter((link) => !link.protected || token)
               .map((link) => (
                 <NavLink
                   key={link.to}

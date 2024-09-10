@@ -3,11 +3,13 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const navLinks = [
-  { to: "/", label: "Home", protected: false },
-  { to: "/events", label: "Events", protected: true },
+  { to: "/", label: "Events", protected: false },
+  { to: "/upcoming", label: "Upcoming", protected: false },
   { to: "/create-event", label: "Create Event", protected: true },
 ];
-
+const closeSidebar = () => {
+  document.getElementById("sidebar").checked = false;
+};
 export const Sidebar = () => {
   const { token, handleLogout } = useAuth();
   const navigate = useNavigate();
@@ -18,15 +20,16 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="drawer-side h-screen overflow-hidden">
-      <label htmlFor="my-drawer-3" className="drawer-overlay"></label>
-      <ul className="menu py-4 w-52 lg:w-80 h-screen bg-base-200">
+    <div className="drawer-side">
+      <label htmlFor="sidebar" className="drawer-overlay"></label>
+      <ul className="menu w-52 lg:w-80 h-full bg-base-200">
         {navLinks
           .filter((link) => !link.protected || token)
           .map((link) => (
             <NavLink
               key={link.to}
               to={link.to}
+              onClick={closeSidebar}
               className={({ isActive }) =>
                 `p-4 hover:bg-gray-200 capitalize ${
                   isActive ? "font-bold" : "border-transparent"

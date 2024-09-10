@@ -4,9 +4,9 @@ import Navbar from "../components/Navbar";
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen">
+    <div className="h-screen">
       <Navbar />
-      <div className="content-wrapper px-[3%] py-10">
+      <div className=" h-[calc(100vh-4rem)] overflow-y-auto text-white bg-gray-700 px-[3%] py-10">
         <Outlet />
       </div>
     </div>
