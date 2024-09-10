@@ -1,82 +1,138 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import HTTP from "../lib/HTTP";
 
 const SignInPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
+  const { token, handleLogin } = useAuth();
   const navigate = useNavigate();
+
+  if (token) {
+    return <Navigate to="/" />;
+  }
+
+  const [formValues, setFormValues] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formValues.email.trim()) newErrors.email = "Email is required.";
+    else {
+      const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+      if (!emailPattern.test(formValues.email)) {
+        newErrors.email = "Please enter a valid email address.";
+      }
+    }
+
+    if (!formValues.password.trim())
+      newErrors.password = "Password is required.";
+    else if (formValues.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long.";
+    }
+
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Reset any previous errors
-    setError(null);
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setLoading(true);
+    setErrors({});
 
     try {
-      const response = await fetch('/api/login', {  
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
+      const data = await HTTP("/auth/login", {
+        method: "POST",
+        body: JSON.stringify(formValues),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Something went wrong');
+      if (data.error) {
+        throw new Error(data.error);
       }
 
-     
-      localStorage.setItem('apiToken', data.token);
+      handleLogin(data.token, data.user);
 
-      
-      navigate('/');
+      navigate("/");
     } catch (error) {
-      setError(error.message);
+      setErrors({ api: error.message });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Sign In</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+    <div className="mx-auto max-w-96">
+      <h2 className="text-2xl font-bold mb-6">Sign In</h2>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block font-medium">Email</label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="block font-medium">Password</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
+      {errors.api && (
+        <p className="text-red-500 text-xs text-center mb-4">{errors.api}</p>
+      )}
 
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded-lg">
-            Sign In
-          </button>
-        </form>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-1">
+          <label htmlFor="email" className="block font-medium">
+            Email
+          </label>
+          <input
+            id="email"
+            name="email"
+            value={formValues.email}
+            onChange={handleChange}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="example@example.com"
+          />
+          {errors.email && (
+            <p className="text-red-500 text-xs">{errors.email}</p>
+          )}
+        </div>
 
-        <p className="text-center mt-4">
-          Don't have an account? <a href="/signup" className="text-blue-500">Sign Up</a>
-        </p>
-      </div>
+        <div className="space-y-1">
+          <label htmlFor="password" className="block font-medium">
+            Password
+          </label>
+          <input
+            id="password"
+            name="password"
+            type="password"
+            value={formValues.password}
+            onChange={handleChange}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Password"
+          />
+          {errors.password && (
+            <p className="text-red-500 text-xs">{errors.password}</p>
+          )}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
+          disabled={loading}
+        >
+          {loading ? "Signing In..." : "Sign In"}
+        </button>
+      </form>
+
+      <p className="text-center mt-4 text-sm">
+        Don't have an account?{" "}
+        <Link to="/signup" className="text-primary">
+          Sign Up
+        </Link>
+      </p>
     </div>
   );
 };
