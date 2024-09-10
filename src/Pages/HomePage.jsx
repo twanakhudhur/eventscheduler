@@ -1,14 +1,14 @@
-import  { useEffect, useState } from 'react';
-import EventCard from '../components/EventCard';
+import { useEffect, useState } from "react";
+import EventCard from "../components/EventCard";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
 
   // useEffect(() => {
-   
+
   //   const fetchEvents = async () => {
   //     try {
-  //       const response = await fetch('/api/events');  
+  //       const response = await fetch('/api/events');
   //       const data = await response.json();
   //       setEvents(data);
   //     } catch (error) {
@@ -20,13 +20,11 @@ const HomePage = () => {
   // }, []);
 
   return (
-    <div >
+    <div>
       <h1 className="text-3xl font-bold mb-6">Upcoming Events</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {events.length > 0 ? (
-          events.map(event => (
-            <EventCard key={event.id} event={event} />
-          ))
+          events.map((event) => <EventCard key={event.id} event={event} />)
         ) : (
           <p>No events available at the moment.</p>
         )}
