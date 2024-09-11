@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import HTTP from "../lib/HTTP";
+import { useToast } from "../context/ToastContext";
 
 const SignUpPage = () => {
+  const { showToast } = useToast();
   const { token } = useAuth();
   const navigate = useNavigate();
 
@@ -70,9 +72,11 @@ const SignUpPage = () => {
       if (response.error) {
         throw new Error(response.error);
       } else {
+        showToast("Account created successfully!", "success");
         navigate("/signin");
       }
     } catch (error) {
+      showToast(error.message, "error");
       setErrors({ api: error.message });
     } finally {
       setLoading(false);

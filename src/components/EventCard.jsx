@@ -1,32 +1,29 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
+import { format, isPast, isToday, isThisWeek, isThisMonth } from "date-fns";
 
 const EventCard = ({ event }) => {
-  return (
-    <div className="max-w-sm bg-white rounded-lg border border-gray-200 shadow-md overflow-hidden">
-      <div className="p-5">
-        <h3 className="text-2xl font-bold mb-2">{event.name}</h3>
-        <p className="text-gray-500 mb-4">{new Date(event.date).toLocaleDateString()}</p>
-        <p className="text-gray-700 mb-4">{event.description.substring(0, 100)}...</p>
-        <Link 
-          to={`/events/${event.id}`} 
-          className="inline-block bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600"
-        >
-          View Details
-        </Link>
-      </div>
-    </div>
-  );
-};
+  const eventDate = new Date(event.date);
 
-EventCard.propTypes = {
-  event: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    date: PropTypes.instanceOf(Date).isRequired,
-    description: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-  }).isRequired,
+  const getEventStatus = () => {
+    if (isPast(eventDate) && !isToday(eventDate)) return "bg-error";
+    if (isToday(eventDate)) return "bg-error";
+    if (isThisWeek(eventDate)) return "bg-warning";
+    if (isThisMonth(eventDate)) return "bg-secondary";
+    return "bg-primary";
+  };
+
+  return (
+    <Link to={`/events/${event.id}`}>
+      <div className={`card text-primary-content ${getEventStatus()} bg-opacity-85 hover:bg-opacity-100 hover:scale-105`}>
+        <div className="card-body">
+          <h2 className="card-title capitalize">{event.title}</h2>
+          <p>{format(eventDate, "MMM d, yyyy HH:mm")}</p>
+          <p className="capitalize">{event.location}</p>
+        </div>
+      </div>
+    </Link>
+  );
 };
 
 export default EventCard;
