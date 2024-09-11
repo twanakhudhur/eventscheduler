@@ -2,8 +2,10 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import HTTP from "../lib/HTTP";
+import { useToast } from "../context/ToastContext";
 
 const SignInPage = () => {
+  const { showToast } = useToast();
   const { token, handleLogin } = useAuth();
   const navigate = useNavigate();
 
@@ -65,9 +67,11 @@ const SignInPage = () => {
       }
 
       handleLogin(data.token, data.user);
+      showToast(`Welcome ${data.user.name}`, "success");
 
       navigate("/");
     } catch (error) {
+      showToast(error.message, "error");
       setErrors({ api: error.message });
     } finally {
       setLoading(false);
