@@ -43,62 +43,64 @@ const CreateEventPage = () => {
   };
 
   return (
-    <div>
-      <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Create Event</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
-        {success && (
-          <p className="text-green-500 text-center mb-4">{success}</p>
-        )}
+    <div className="mx-auto max-w-96">
+      <h2 className="text-2xl font-bold mb-6 text-center">Create Event</h2>
+      {error && <p className="text-red-500 text-xs text-center mb-4">{error}</p>}
+      {success && <p className="text-green-500 text-xs text-center mb-4">{success}</p>}
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="name" className="block font-medium">
-              Event Name
-            </label>
-            <input
-              id="name"
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="date" className="block font-medium">
-              Event Date
-            </label>
-            <input
-              id="date"
-              type="date"
-              value={date}
-              onChange={(e) => setDate(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
-          <div>
-            <label htmlFor="description" className="block font-medium">
-              Description
-            </label>
-            <textarea
-              id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="w-full p-2 border border-gray-300 rounded-lg"
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="space-y-1">
+          <label htmlFor="name" className="block font-medium">Event Name</label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Event Name"
+            required
+          />
+          {error && <p className="text-red-500 text-xs">{error}</p>}
+        </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 rounded-lg"
-          >
-            Create Event
-          </button>
-        </form>
-      </div>
+        <div className="space-y-1">
+          <label htmlFor="date" className="block font-medium">Event Date</label>
+          <input
+            id="date"
+            name="date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Event Date"
+            required
+          />
+          {error && <p className="text-red-500 text-xs">{error}</p>}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="description" className="block font-medium">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Event Description"
+            required
+          />
+          {error && <p className="text-red-500 text-xs">{error}</p>}
+        </div>
+
+        <button
+          type="submit"
+          className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
+          disabled={false}
+        >
+          Create Event
+        </button>
+      </form>
     </div>
   );
 };
