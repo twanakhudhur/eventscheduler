@@ -28,7 +28,7 @@ const CreateEventPage = () => {
     const newErrors = {};
     if (!formValues.title.trim()) newErrors.title = "Title is required.";
     else if (formValues.title.length < 3) {
-      newErrors.password = "Password must be at least 3 characters long.";
+      newErrors.title = "Title must be at least 3 characters long.";
     }
     if (!formValues.date.trim()) newErrors.date = "Date is required.";
     if (!formValues.description.trim())

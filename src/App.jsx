@@ -52,7 +52,7 @@ function App() {
               element: <ProfilePage />,
             },
             {
-              path: "/update-event/:eventId", 
+              path: "/update-event/:id", 
               element: <UpdateEventPage />,
             },
           ],
