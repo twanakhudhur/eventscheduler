@@ -8,11 +8,11 @@ import EventDetailsPage from "./Pages/EventDetailsPage";
 import HomePage from "./Pages/HomePage";
 import SignUpPage from "./Pages/SignUpPage";
 import SignInPage from "./Pages/SignInPage";
-import CreateEventPage from "./pages/CreateEventPage";
+import CreateEventPage from "./Pages/CreateEventPage";
 import ProtectedRoute from "./layouts/ProtectedRoute";
 import UpcomingPage from "./Pages/UpcomingPage";
 import ProfilePage from "./Pages/ProfilePage";
-
+import UpdateEventPage from "./Pages/UpdateEventPage";
 function App() {
   const router = createBrowserRouter([
     {
@@ -50,6 +50,10 @@ function App() {
             {
               path: "/profile",
               element: <ProfilePage />,
+            },
+            {
+              path: "/update-event/:eventId", 
+              element: <UpdateEventPage />,
             },
           ],
         },
