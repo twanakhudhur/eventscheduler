@@ -28,7 +28,7 @@ export const Navbar = () => {
             <label
               htmlFor="sidebar"
               aria-label="open sidebar"
-              aria-expanded="false"
+              aria-expanded={false} // Adjust dynamically if needed
               className="btn btn-square btn-ghost"
             >
               <svg
@@ -73,19 +73,27 @@ export const Navbar = () => {
                 <div
                   tabIndex={0}
                   role="button"
-                  className="btn btn-ghost bg-trnasparent hover:bg-transparent rounded-btn px-0"
+                  className="btn btn-ghost bg-transparent hover:bg-transparent rounded-btn px-0"
                 >
-                  <RiAccountCircleFill className="text-3xl"/>
+                  <RiAccountCircleFill className="text-3xl" />
                 </div>
                 <ul
                   tabIndex={0}
                   className="menu dropdown-content bg-neutral rounded-box z-[1] mt-1 w-36 p-2 shadow space-y-3"
                 >
                   <li>
-                  <button className="flex items-center justify-between">Setting <IoSettings className="text-xl"/></button>
+                    <button aria-label="Settings" className="flex items-center justify-between">
+                      Setting <IoSettings className="text-xl" />
+                    </button>
                   </li>
                   <li>
-                    <button onClick={logout} className="flex items-center justify-between">Log Out <IoLogOut className="text-xl"/></button>
+                    <button
+                      onClick={logout}
+                      aria-label="Log Out"
+                      className="flex items-center justify-between"
+                    >
+                      Log Out <IoLogOut className="text-xl" />
+                    </button>
                   </li>
                 </ul>
               </div>

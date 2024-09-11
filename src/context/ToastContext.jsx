@@ -15,8 +15,8 @@ export const ToastProvider = ({ children }) => {
       {children}
       {toast && (
         <div className={`toast toast-top toast-end`}>
-          <div className={`alert ${toast.type === 'success' ? 'alert-success' : 'alert-error'}`}>
-            <span>{toast.message}</span>
+          <div className={`alert py-2.5 min-w-52 rounded-md ${toast.type === 'success' ? 'alert-success' : 'alert-error'}`}>
+            <span className='text-white text-sm'>{toast.message}</span>
           </div>
         </div>
       )}
