@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { IoLogOut, IoSettings } from "react-icons/io5";
 
 const navLinks = [
   { to: "/", label: "Events", protected: false },
@@ -41,12 +42,19 @@ export const Sidebar = () => {
             </NavLink>
           ))}
         {token ? (
-          <button
-            onClick={logout}
-            className="p-4 bg-neutral text-base-content hover:text-white rounded-md capitalize mt-auto"
-          >
-            Log Out
-          </button>
+          <div className="mt-auto flex flex-col space-y-3">
+            <button
+              className="p-4 bg-neutral text-base-content bg-opacity-50 hover:bg-opacity-100 rounded-md capitalize flex items-center justify-between"
+            >
+              Setting <IoSettings className="text-xl"/>
+            </button>
+            <button
+              onClick={logout}
+              className="p-4 bg-neutral text-base-content bg-opacity-50 hover:bg-opacity-100 rounded-md capitalize mt-auto flex items-center justify-between"
+            >
+              Log Out <IoLogOut className="text-xl"/>
+            </button>
+          </div>
         ) : (
           <NavLink
             to="/signin"

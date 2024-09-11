@@ -129,7 +129,7 @@ const SignInPage = () => {
 
       <p className="text-center mt-4 text-sm">
         Don't have an account?{" "}
-        <Link to="/signup" className="text-primary">
+        <Link to="/signup" className="text-primary" disabled={loading}>
           Sign Up
         </Link>
       </p>
