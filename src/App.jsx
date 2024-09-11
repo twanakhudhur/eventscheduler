@@ -13,8 +13,6 @@ import ProtectedRoute from "./layouts/ProtectedRoute";
 import UpcomingPage from "./Pages/UpcomingPage";
 import ProfilePage from "./Pages/ProfilePage";
 import UpdateEventPage from "./Pages/UpdateEventPage";
-import { ErrorBoundary } from 'react-error-boundary';
-
 function App() {
   const router = createBrowserRouter([
     {
@@ -54,7 +52,7 @@ function App() {
               element: <ProfilePage />,
             },
             {
-              path: "/update-event/:eventId",
+              path: "/update-event/:eventId", 
               element: <UpdateEventPage />,
             },
           ],
@@ -66,11 +64,10 @@ function App() {
       element: <Navigate to="/" replace />,
     },
   ]);
-
   return (
-    <ErrorBoundary fallback={<div>Something went wrong!</div>}>
+    <>
       <RouterProvider router={router} />
-    </ErrorBoundary>
+    </>
   );
 }
 
