@@ -33,6 +33,9 @@ const SignUpPage = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formValues.name.trim()) newErrors.name = "Name is required.";
+    else if (formValues.name.length < 3) {
+      newErrors.name = "Name must be at least 3 characters long.";
+    }
     if (!formValues.email.trim()) newErrors.email = "Email is required.";
     else {
       const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
@@ -103,7 +106,6 @@ const SignUpPage = () => {
             onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
             placeholder="Full Name"
-            required
           />
           {errors.name && <p className="text-red-500 text-xs">{errors.name}</p>}
         </div>
@@ -120,7 +122,6 @@ const SignUpPage = () => {
             onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
             placeholder="example@example.com"
-            required
           />
           {errors.email && (
             <p className="text-red-500 text-xs">{errors.email}</p>
@@ -139,7 +140,6 @@ const SignUpPage = () => {
             onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
             placeholder="Password"
-            required
           />
           {errors.password && (
             <p className="text-red-500 text-xs">{errors.password}</p>

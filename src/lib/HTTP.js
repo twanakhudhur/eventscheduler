@@ -14,6 +14,11 @@ const HTTP = async (endpoint, options = {}) => {
 
   try {
     const response = await fetch(url, finalOptions);
+
+    if (response.status === 401) {
+      window.location.href = '/signin';
+      return null; 
+    }
     
     if (response.status === 204) {
       return null;
