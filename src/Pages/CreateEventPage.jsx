@@ -37,8 +37,14 @@ const CreateEventPage = () => {
       newErrors.location = "Location is required.";
     if (!formValues.latitude.trim())
       newErrors.latitude = "Latitude is required.";
+    else if (latitude < -90 || latitude > 90) {
+      throw new Error("Latitude must be between -90 and 90");
+    }
     if (!formValues.longitude.trim())
       newErrors.longitude = "Longitude is required.";
+    else if (longitude < -180 || longitude > 180) {
+      throw new Error("Validation error: Longitude must be between -180 and 180");
+    }
 
     return newErrors;
   };
@@ -155,6 +161,8 @@ const CreateEventPage = () => {
             id="latitude"
             name="latitude"
             type="number"
+            min={-90}
+            max={90}
             step="any"
             value={formValues.latitude}
             onChange={handleChange}
@@ -174,6 +182,8 @@ const CreateEventPage = () => {
             id="longitude"
             name="longitude"
             type="number"
+            min={-180}
+            max={180}
             step="any"
             value={formValues.longitude}
             onChange={handleChange}
@@ -188,6 +198,7 @@ const CreateEventPage = () => {
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
+          disabled={loading}
         >
           Create Event
         </button>
