@@ -1,5 +1,5 @@
 const HTTP = async (endpoint, options = {}) => {
-  const url = `http://localhost:3001/api${endpoint}`;
+  const url = `${import.meta.env.VITE_API_BASE_URL}${endpoint}`;
 
   const token = localStorage.getItem("token");
 
