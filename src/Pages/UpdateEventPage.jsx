@@ -1,120 +1,228 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import HTTP from "../lib/HTTP"; // Ensure this imports your HTTP utility
+import { useToast } from "../context/ToastContext";
 
 const UpdateEventPage = () => {
-  const { eventId } = useParams(); // Get the event ID from the URL
-  const [name, setName] = useState("");
-  const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(null);
+  const { showToast } = useToast();
+  const { id } = useParams(); // Get the event ID from the URL
+  const [formValues, setFormValues] = useState({
+    title: "",
+    description: "",
+    date: "",
+    location: "",
+    latitude: "",
+    longitude: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch the current event details
     const fetchEventDetails = async () => {
       try {
-        const response = await fetch(`/api/events/${eventId}`);
-        const data = await response.json();
+        const response = await HTTP(`/events/${id}`, { method: "GET" });
 
-        if (!response.ok) {
+        if (!response) {
           throw new Error("Failed to fetch event details");
         }
 
-        // Set the existing event data to state variables
-        setName(data.name);
-        setDate(new Date(data.date).toISOString().split("T")[0]); // Format date for the input field
-        setDescription(data.description);
+        setFormValues({
+          title: response.title,
+          description: response.description,
+          date: new Date(response.date).toISOString().split("T")[0], 
+          location: response.location,
+          latitude: response.latitude,
+          longitude: response.longitude,
+        });
       } catch (error) {
-        setError(error.message);
+        showToast(error.message, "error");
+        setErrors({ api: error.message });
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchEventDetails();
-  }, [eventId]);
+  }, [id, showToast]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    if (!formValues.title.trim()) newErrors.title = "Title is required.";
+    if (!formValues.date.trim()) newErrors.date = "Date is required.";
+    if (!formValues.description.trim())
+      newErrors.description = "Description is required.";
+    if (!formValues.location.trim())
+      newErrors.location = "Location is required.";
+    if (!String(formValues.latitude).trim())
+      newErrors.latitude = "Latitude is required.";
+    if (!String(formValues.longitude).trim())
+      newErrors.longitude = "Longitude is required.";
+
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    setError(null);
-    setSuccess(null);
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      return;
+    }
+
+    setErrors({});
 
     try {
-      const response = await fetch(`/api/events/${eventId}`, {
-        method: "PUT", 
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ name, date, description }),
+      const response = await HTTP(`/events/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(formValues),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Something went wrong while updating the event");
+      if (response.error) {
+        throw new Error(response.error);
       }
 
-      setSuccess("Event updated successfully!");
-      
-      // Optionally navigate to another page or refresh the list
+      showToast("Event updated successfully!", "success");
       navigate("/events");
     } catch (error) {
-      setError(error.message);
+      showToast(error.message, "error");
+      setErrors({ api: error.message });
     }
   };
 
   return (
     <div className="mx-auto max-w-96">
       <h2 className="text-2xl font-bold mb-6 text-center">Update Event</h2>
-      {error && <p className="text-red-500 text-xs text-center mb-4">{error}</p>}
-      {success && <p className="text-green-500 text-xs text-center mb-4">{success}</p>}
+      {errors.api && (
+        <p className="text-red-500 text-xs text-center mb-4">{errors.api}</p>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-5">
         <div className="space-y-1">
-          <label htmlFor="name" className="block font-medium">Event Name</label>
+          <label htmlFor="title" className="block font-medium">
+            Event Title
+          </label>
           <input
-            id="name"
-            name="name"
+            id="title"
+            name="title"
             type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formValues.title}
+            onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Event Name"
+            placeholder="Event Title"
             required
           />
+          {errors.title && (
+            <p className="text-red-500 text-xs">{errors.title}</p>
+          )}
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="date" className="block font-medium">Event Date</label>
+          <label htmlFor="date" className="block font-medium">
+            Event Date
+          </label>
           <input
             id="date"
             name="date"
             type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
+            value={formValues.date}
+            onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
             placeholder="Event Date"
             required
           />
+          {errors.date && <p className="text-red-500 text-xs">{errors.date}</p>}
         </div>
 
         <div className="space-y-1">
-          <label htmlFor="description" className="block font-medium">Description</label>
+          <label htmlFor="description" className="block font-medium">
+            Description
+          </label>
           <textarea
             id="description"
             name="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={formValues.description}
+            onChange={handleChange}
             className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
             placeholder="Event Description"
             required
           />
+          {errors.description && (
+            <p className="text-red-500 text-xs">{errors.description}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="location" className="block font-medium">
+            Location
+          </label>
+          <input
+            id="location"
+            name="location"
+            type="text"
+            value={formValues.location}
+            onChange={handleChange}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Event Location"
+            required
+          />
+          {errors.location && (
+            <p className="text-red-500 text-xs">{errors.location}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="latitude" className="block font-medium">
+            Latitude
+          </label>
+          <input
+            id="latitude"
+            name="latitude"
+            type="number"
+            step="any"
+            value={formValues.latitude}
+            onChange={handleChange}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Latitude"
+            required
+          />
+          {errors.latitude && (
+            <p className="text-red-500 text-xs">{errors.latitude}</p>
+          )}
+        </div>
+
+        <div className="space-y-1">
+          <label htmlFor="longitude" className="block font-medium">
+            Longitude
+          </label>
+          <input
+            id="longitude"
+            name="longitude"
+            type="number"
+            step="any"
+            value={formValues.longitude}
+            onChange={handleChange}
+            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+            placeholder="Longitude"
+            required
+          />
+          {errors.longitude && (
+            <p className="text-red-500 text-xs">{errors.longitude}</p>
+          )}
         </div>
 
         <button
           type="submit"
           className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
-          disabled={false}
         >
           Update Event
         </button>
