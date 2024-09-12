@@ -5,6 +5,7 @@ import { useToast } from "../context/ToastContext";
 
 const CreateEventPage = () => {
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
@@ -51,10 +52,12 @@ const CreateEventPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setLoading(false);
       return;
     }
 
@@ -74,7 +77,10 @@ const CreateEventPage = () => {
     } catch (error) {
       showToast(error.message, "error");
       setErrors({ api: error.message });
+    }finally {
+      setLoading(false); 
     }
+  
   };
 
   return (

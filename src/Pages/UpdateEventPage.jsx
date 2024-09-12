@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import HTTP from "../lib/HTTP"; // Ensure this imports your HTTP utility
+import HTTP from "../lib/HTTP";
 import { useToast } from "../context/ToastContext";
 
 const UpdateEventPage = () => {
   const { showToast } = useToast();
-  const { id } = useParams(); // Get the event ID from the URL
+  const { id } = useParams();
+  const [updateLoading, setUpdateLoading] = useState(true);
   const [formValues, setFormValues] = useState({
     title: "",
     description: "",
@@ -21,6 +22,7 @@ const UpdateEventPage = () => {
   useEffect(() => {
     const fetchEventDetails = async () => {
       try {
+        setLoading(true);
         const response = await HTTP(`/events/${id}`, { method: "GET" });
 
         if (!response) {
@@ -30,7 +32,7 @@ const UpdateEventPage = () => {
         setFormValues({
           title: response.title,
           description: response.description,
-          date: new Date(response.date).toISOString().split("T")[0], 
+          date: new Date(response.date).toISOString().split("T")[0],
           location: response.location,
           latitude: response.latitude,
           longitude: response.longitude,
@@ -72,10 +74,12 @@ const UpdateEventPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setUpdateLoading(true);
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      setUpdateLoading(false);
       return;
     }
 
@@ -94,6 +98,7 @@ const UpdateEventPage = () => {
       showToast("Event updated successfully!", "success");
       navigate("/events");
     } catch (error) {
+      setUpdateLoading(false);
       showToast(error.message, "error");
       setErrors({ api: error.message });
     }
@@ -105,128 +110,149 @@ const UpdateEventPage = () => {
       {errors.api && (
         <p className="text-red-500 text-xs text-center mb-4">{errors.api}</p>
       )}
+      {!loading ? (
+        <>
+          <div className="space-y-5">
+            <div className="space-y-1">
+              <div className="h-5 w-1/3 bg-primary rounded skeleton"></div>
+              <div className="h-10 w-full bg-primary rounded skeleton"></div>
+            </div>
+            <div className="space-y-1">
+              <div className="h-5 w-1/3 bg-primary rounded skeleton"></div>
+              <div className="h-10 w-full bg-primary rounded skeleton"></div>
+            </div>
+            <div className="space-y-1">
+              <div className="h-5 w-1/3 bg-primary rounded skeleton"></div>
+              <div className="h-10 w-full bg-primary rounded skeleton"></div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-1">
+            <label htmlFor="title" className="block font-medium">
+              Event Title
+            </label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={formValues.title}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Event Title"
+              required
+            />
+            {errors.title && (
+              <p className="text-red-500 text-xs">{errors.title}</p>
+            )}
+          </div>
 
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div className="space-y-1">
-          <label htmlFor="title" className="block font-medium">
-            Event Title
-          </label>
-          <input
-            id="title"
-            name="title"
-            type="text"
-            value={formValues.title}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Event Title"
-            required
-          />
-          {errors.title && (
-            <p className="text-red-500 text-xs">{errors.title}</p>
-          )}
-        </div>
+          <div className="space-y-1">
+            <label htmlFor="date" className="block font-medium">
+              Event Date
+            </label>
+            <input
+              id="date"
+              name="date"
+              type="date"
+              value={formValues.date}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Event Date"
+              required
+            />
+            {errors.date && (
+              <p className="text-red-500 text-xs">{errors.date}</p>
+            )}
+          </div>
 
-        <div className="space-y-1">
-          <label htmlFor="date" className="block font-medium">
-            Event Date
-          </label>
-          <input
-            id="date"
-            name="date"
-            type="date"
-            value={formValues.date}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Event Date"
-            required
-          />
-          {errors.date && <p className="text-red-500 text-xs">{errors.date}</p>}
-        </div>
+          <div className="space-y-1">
+            <label htmlFor="description" className="block font-medium">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formValues.description}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Event Description"
+              required
+            />
+            {errors.description && (
+              <p className="text-red-500 text-xs">{errors.description}</p>
+            )}
+          </div>
 
-        <div className="space-y-1">
-          <label htmlFor="description" className="block font-medium">
-            Description
-          </label>
-          <textarea
-            id="description"
-            name="description"
-            value={formValues.description}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Event Description"
-            required
-          />
-          {errors.description && (
-            <p className="text-red-500 text-xs">{errors.description}</p>
-          )}
-        </div>
+          <div className="space-y-1">
+            <label htmlFor="location" className="block font-medium">
+              Location
+            </label>
+            <input
+              id="location"
+              name="location"
+              type="text"
+              value={formValues.location}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Event Location"
+              required
+            />
+            {errors.location && (
+              <p className="text-red-500 text-xs">{errors.location}</p>
+            )}
+          </div>
 
-        <div className="space-y-1">
-          <label htmlFor="location" className="block font-medium">
-            Location
-          </label>
-          <input
-            id="location"
-            name="location"
-            type="text"
-            value={formValues.location}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Event Location"
-            required
-          />
-          {errors.location && (
-            <p className="text-red-500 text-xs">{errors.location}</p>
-          )}
-        </div>
+          <div className="space-y-1">
+            <label htmlFor="latitude" className="block font-medium">
+              Latitude
+            </label>
+            <input
+              id="latitude"
+              name="latitude"
+              type="number"
+              step="any"
+              value={formValues.latitude}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Latitude"
+              required
+            />
+            {errors.latitude && (
+              <p className="text-red-500 text-xs">{errors.latitude}</p>
+            )}
+          </div>
 
-        <div className="space-y-1">
-          <label htmlFor="latitude" className="block font-medium">
-            Latitude
-          </label>
-          <input
-            id="latitude"
-            name="latitude"
-            type="number"
-            step="any"
-            value={formValues.latitude}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Latitude"
-            required
-          />
-          {errors.latitude && (
-            <p className="text-red-500 text-xs">{errors.latitude}</p>
-          )}
-        </div>
+          <div className="space-y-1">
+            <label htmlFor="longitude" className="block font-medium">
+              Longitude
+            </label>
+            <input
+              id="longitude"
+              name="longitude"
+              type="number"
+              step="any"
+              value={formValues.longitude}
+              onChange={handleChange}
+              className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
+              placeholder="Longitude"
+              required
+            />
+            {errors.longitude && (
+              <p className="text-red-500 text-xs">{errors.longitude}</p>
+            )}
+          </div>
 
-        <div className="space-y-1">
-          <label htmlFor="longitude" className="block font-medium">
-            Longitude
-          </label>
-          <input
-            id="longitude"
-            name="longitude"
-            type="number"
-            step="any"
-            value={formValues.longitude}
-            onChange={handleChange}
-            className="w-full p-2.5 text-white rounded-lg bg-neutral outline-none focus:ring-2 focus:ring-neutral-content"
-            placeholder="Longitude"
-            required
-          />
-          {errors.longitude && (
-            <p className="text-red-500 text-xs">{errors.longitude}</p>
-          )}
-        </div>
-
-        <button
-          type="submit"
-          className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
-        >
-          Update Event
-        </button>
-      </form>
+          <button
+            type="submit"
+            className="w-full bg-primary text-white py-2 rounded-lg bg-opacity-75 hover:bg-opacity-100"
+            disabled={updateLoading}
+          >
+            Update Event
+          </button>
+        </form>
+      )}
     </div>
   );
 };
