@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { IoLogOut, IoSettings } from "react-icons/io5";
 
@@ -45,12 +45,12 @@ export const Sidebar = () => {
           ))}
         {token ? (
           <div className="mt-auto flex flex-col space-y-3">
-            <button
+            <Link to={"/profile"} onClick={closeSidebar}
               aria-label="Settings"
               className="p-4 bg-neutral text-base-content bg-opacity-50 hover:bg-opacity-100 rounded-md capitalize flex items-center justify-between"
             >
               Setting <IoSettings className="text-xl"/>
-            </button>
+            </Link>
             <button
               aria-label="Log Out"
               onClick={logout}

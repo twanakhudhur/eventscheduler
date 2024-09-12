@@ -52,16 +52,16 @@ function App() {
               element: <ProfilePage />,
             },
             {
-              path: "/update-event/:id", 
+              path: "/update-event/:id",
               element: <UpdateEventPage />,
             },
           ],
         },
+        {
+          path: "*",
+          element: <Navigate to="/" replace />,
+        },
       ],
-    },
-    {
-      path: "*",
-      element: <Navigate to="/" replace />,
     },
   ]);
   return (
