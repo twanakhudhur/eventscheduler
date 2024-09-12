@@ -110,7 +110,7 @@ const UpdateEventPage = () => {
       {errors.api && (
         <p className="text-red-500 text-xs text-center mb-4">{errors.api}</p>
       )}
-      {!loading ? (
+      {loading ? (
         <>
           <div className="space-y-5">
             <div className="space-y-1">
