@@ -82,9 +82,13 @@ export const Navbar = () => {
                   className="menu dropdown-content bg-neutral rounded-box z-[1] mt-1 w-36 p-2 shadow space-y-3"
                 >
                   <li>
-                    <button aria-label="Settings" className="flex items-center justify-between">
+                    <Link
+                      to={"/profile"}
+                      aria-label="Settings"
+                      className="flex items-center justify-between"
+                    >
                       Setting <IoSettings className="text-xl" />
-                    </button>
+                    </Link>
                   </li>
                   <li>
                     <button

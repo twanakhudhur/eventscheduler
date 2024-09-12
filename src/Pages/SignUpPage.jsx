@@ -67,7 +67,6 @@ const SignUpPage = () => {
         method: "POST",
         body: JSON.stringify(formValues),
       });
-      console.log(response);
 
       if (response.error) {
         throw new Error(response.error);

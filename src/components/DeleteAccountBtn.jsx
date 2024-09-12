@@ -3,17 +3,19 @@ import ConfirmDeleteModal from "./ConfirmDeleteModal";
 import HTTP from "../lib/HTTP";
 import { useToast } from "../context/ToastContext";
 import { useNavigate } from "react-router-dom";
-import { MdDelete } from "react-icons/md";
+import { useAuth } from "../context/AuthContext";
 
-const DeleteBtn = ({ id }) => {
+const DeleteAccountBtn = ({id}) => {
   const { showToast } = useToast();
   const [isModalOpen, setModalOpen] = useState(false);
   const navigate = useNavigate();
+  const { handleLogout } = useAuth();
 
   const handleDelete = async () => {
     try {
-      await HTTP(`/events/${id}`, { method: "DELETE" });
-      showToast("Event deleted successfully!", "warning");
+      await HTTP(`/users/${id}`, { method: "DELETE" });
+      showToast("Account deleted successfully!", "warning");
+      handleLogout();
       navigate("/");
     } catch (error) {
       showToast(error.message, "error");
@@ -26,23 +28,22 @@ const DeleteBtn = ({ id }) => {
     <>
       <button
         onClick={() => setModalOpen(true)}
-        className="bg-error hover:scale-105 rounded p-2"
-        aria-label="Delete"
+        className="bg-red-500 text-white py-2 px-4 rounded-lg"
       >
-        <MdDelete />
+        Delete Account
       </button>
 
       <ConfirmDeleteModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         onConfirm={handleDelete}
-        title="Delete Event"
-        description="Are you sure you want to delete this event? This action cannot be undone."
-        confirmLabel="Delete Event"
+        title="Delete Account"
+        description="Are you sure you want to delete your account? This action cannot be undone."
+        confirmLabel="Delete Account"
         cancelLabel="Cancel"
       />
     </>
   );
 };
 
-export default DeleteBtn;
+export default DeleteAccountBtn;

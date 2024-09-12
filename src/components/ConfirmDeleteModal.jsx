@@ -1,12 +1,14 @@
-const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm }) => {
+import React from "react";
+
+const ConfirmDeleteModal = ({ isOpen, onClose, onConfirm, title = "Confirm Delete", description = "Are you sure you want to delete this item?" }) => {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-[100]">
       <div className="modal modal-open">
         <div className="modal-box">
-          <h2 className="text-lg font-bold">Confirm Delete</h2>
-          <p>Are you sure you want to delete this item?</p>
+          <h2 className="text-lg font-bold">{title}</h2>
+          <p>{description}</p>
           <div className="modal-action">
             <button onClick={onConfirm} className="btn btn-error">
               Delete

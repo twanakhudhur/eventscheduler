@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import HTTP from "../lib/HTTP";
 import { format, isPast, isToday, isThisWeek, isThisMonth } from "date-fns";
 import { useToast } from "../context/ToastContext";
@@ -64,7 +64,9 @@ const EventDetailsPage = () => {
             <button
               className={`hover:scale-105 rounded p-2 ${getEventStatus()}`}
             >
-              <MdEdit />
+              <Link to={`/update-event/${event?.id}`}>
+                <MdEdit />
+              </Link>
             </button>
           </div>
           <div
