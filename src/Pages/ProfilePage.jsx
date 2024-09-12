@@ -6,6 +6,7 @@ import DeleteAccountBtn from "../components/DeleteAccountBtn";
 
 export default function ProfilePage() {
   const { showToast } = useToast();
+  const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState({
     id: "",
     name: "",
@@ -44,6 +45,7 @@ export default function ProfilePage() {
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await HTTP(`/users/${profile.id}`, {
@@ -61,6 +63,7 @@ export default function ProfilePage() {
       showToast("Profile updated successfully!", "success");
       setIsEditing(false);
     } catch (error) {
+      setLoading(false);
       showToast(error.message, "error");
       setErrors({ api: error.message });
     }
@@ -137,6 +140,7 @@ export default function ProfilePage() {
                 <button
                   type="submit"
                   className="bg-primary bg-opacity-75 hover:bg-opacity-100 text-white py-2 px-4 rounded-lg w-full"
+                  disabled={loading}
                 >
                   Update Profile
                 </button>
